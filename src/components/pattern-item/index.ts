@@ -21,7 +21,7 @@ class PatternItem extends Component<Props> {
     $close.className = "FastReporting__PatternItem__close";
     $close.textContent = "X";
     $close.addEventListener("click", () => {
-      this.$html.remove();
+      this.$html!.remove();
       this.props.onDelete();
     });
 

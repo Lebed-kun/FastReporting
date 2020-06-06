@@ -34,12 +34,10 @@ class App extends Component {
     this.sidetip!.setProps({
       hide: this.state.showReporter
     });
-    this.sidetip!.render();
 
     this.reporter!.setProps({
       hide: !this.state.showReporter
     });
-    this.reporter!.render();
   }
 
   public render() {

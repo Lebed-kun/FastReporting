@@ -22,9 +22,9 @@ class Sidetip extends Component<Props> {
 
   private update(): void {
     if (this.props.hide) {
-      this.$html.setAttribute("style", "display: none;");
-    } else if (this.$html.hasAttribute("style")) {
-      this.$html.removeAttribute("style");
+      this.$html!.setAttribute("style", "display: none;");
+    } else if (this.$html!.hasAttribute("style")) {
+      this.$html!.removeAttribute("style");
     }
   }
 
