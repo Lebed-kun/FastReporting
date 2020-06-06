@@ -10,6 +10,24 @@ class PatternList extends Component {
     patterns: []
   };
 
+  private item(pattern: string): HTMLElement {
+    const patternsCount = this.state.patterns.length;
+    const patternItemsCount = this.patternItems.length;
+
+    const patternItem = new PatternItem({
+      pattern,
+      onDelete: () => {
+        this.state.patterns.splice(patternsCount, patternsCount);
+        this.patternItems.splice(patternItemsCount, patternItemsCount);
+      }
+    });
+
+    this.state.patterns.push(pattern);
+    this.patternItems.push(patternItem);
+
+    return patternItem.render();
+  }
+
   private initialize() {
     const $html = document.createElement("div");
     $html.className = "FastReporting__PatternList";
@@ -17,13 +35,16 @@ class PatternList extends Component {
     this.$html = $html;
   }
 
-  private update() {}
-
-  public addItem(pattern: string) {}
+  public addItem(pattern: string) {
+    const $item = this.item(pattern);
+    this.$html.appendChild($item);
+  }
 
   public render() {
-    !this.$html ? this.initialize() : this.update();
+    !this.$html && this.initialize();
 
     return this.$html;
   }
 }
+
+export default PatternList;
