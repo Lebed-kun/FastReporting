@@ -33,6 +33,8 @@ class PatternList extends Component {
     $html.className = "FastReporting__PatternList";
 
     this.$html = $html;
+
+    this.patternItems = [];
   }
 
   public addItem(pattern: string) {
