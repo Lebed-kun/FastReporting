@@ -12,20 +12,20 @@ class PatternList extends Component {
 
   private item(pattern: string): HTMLElement {
     const patternsCount = this.state.patterns.length;
-    const patternItemsCount = this.patternItems.length;
+    const patternItemsCount = this.patternItems!.length;
 
     const patternItem = new PatternItem({
       pattern,
       onDelete: () => {
         this.state.patterns.splice(patternsCount, patternsCount);
-        this.patternItems.splice(patternItemsCount, patternItemsCount);
+        this.patternItems!.splice(patternItemsCount, patternItemsCount);
       }
     });
 
-    this.state.patterns.push(pattern);
-    this.patternItems.push(patternItem);
+    (this.state.patterns as string[]).push(pattern);
+    this.patternItems!.push(patternItem);
 
-    return patternItem.render();
+    return patternItem.render()!;
   }
 
   private initialize() {
@@ -37,7 +37,7 @@ class PatternList extends Component {
 
   public addItem(pattern: string) {
     const $item = this.item(pattern);
-    this.$html.appendChild($item);
+    this.$html!.appendChild($item);
   }
 
   public render() {
