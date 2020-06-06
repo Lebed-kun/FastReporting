@@ -1,2 +1,0 @@
-# FastReporting
-Created with CodeSandbox
