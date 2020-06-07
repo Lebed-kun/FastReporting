@@ -14,6 +14,10 @@ abstract class Component<Props = {}> {
     this.render();
   }
 
+  public getProps(): Props & DefaultProps {
+    return Object.create(this.props);
+  }
+
   public abstract render(): any;
 }
 

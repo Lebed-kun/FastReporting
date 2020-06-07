@@ -2,7 +2,7 @@ import Component from "../../component";
 
 interface Props {
   pattern: string;
-  onDelete: () => void;
+  onDelete?: () => void;
 }
 
 class PatternItem extends Component<Props> {
@@ -22,7 +22,7 @@ class PatternItem extends Component<Props> {
     $close.textContent = "X";
     $close.addEventListener("click", () => {
       this.$html!.remove();
-      this.props.onDelete();
+      this.props.onDelete && this.props.onDelete();
     });
 
     return $close;
