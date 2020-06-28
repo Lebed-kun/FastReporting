@@ -1,5 +1,8 @@
 import Component from "../../component";
 
+import PatternList from "../pattern-list";
+import GenericForm from "../generic-form";
+
 interface Props {
   hide?: boolean;
   handleHide?: () => void;
@@ -7,6 +10,8 @@ interface Props {
 
 class Reporter extends Component<Props> {
   private $html?: HTMLElement;
+  private patternList?: PatternList;
+  private addPatternForm?: GenericForm;
 
   private head(): HTMLElement {
     const $head = document.createElement("div");
@@ -28,6 +33,36 @@ class Reporter extends Component<Props> {
     const $content = document.createElement("div");
     $content.className = "FastReporting__Reporter__content";
 
+    $content.append(this.contentPatterns(), this.contentAddItem());
+
+    return $content;
+  }
+
+  private contentPatterns(): HTMLElement {
+    this.patternList = new PatternList({
+      patterns: ["Hello", "world"] // TODO: remove that
+    });
+
+    const $content = this.patternList.render()!;
+
+    return $content;
+  }
+
+  private contentAddItem(): HTMLElement {
+    this.addPatternForm = new GenericForm({
+      fieldName: "pattern",
+      placeholder: "Регулярное выражение...",
+      buttonText: "Добавить",
+      onSubmit: ({ pattern }) => {
+        this.patternList &&
+          this.patternList.setProps({
+            patterns: [...this.patternList.getProps().patterns, pattern]
+          });
+      }
+    });
+
+    const $content = this.addPatternForm.render()!;
+
     return $content;
   }
 
@@ -37,8 +72,7 @@ class Reporter extends Component<Props> {
 
     this.props.hide && $html.setAttribute("style", "display: none;");
 
-    $html.appendChild(this.head());
-    $html.appendChild(this.content());
+    $html.append(this.head(), this.content());
 
     this.$html = $html;
   }
