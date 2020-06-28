@@ -1,4 +1,5 @@
 // import "./tests/sidetip"; // Correct!
 // import "./tests/reporter"; // Corrrect!
-import "./tests/app"; // Correct!
-// import "./tests/pattern-item";
+// import "./tests/pattern-item"; // Correct!
+// import "./tests/generic-form"; // Correct!
+// import "./tests/app";

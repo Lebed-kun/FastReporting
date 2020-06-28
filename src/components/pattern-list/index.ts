@@ -55,7 +55,7 @@ class PatternList extends Component<Props> {
     }
 
     // For insertion
-    if (maxLength === patterns.length) {
+    if (minLength !== maxLength && maxLength === patterns.length) {
       this.patternItems = [
         ...patternItems!,
         ...patterns.slice(i).map(
@@ -71,10 +71,12 @@ class PatternList extends Component<Props> {
         )
       ];
 
-      this.patternItems.slice(i);
+      this.patternItems.slice(i).forEach(item => {
+        this.$html && this.$html.appendChild(item.render()!);
+      });
     }
     // For deletion
-    else if (maxLength === patternItems!.length) {
+    else if (minLength !== maxLength && maxLength === patternItems!.length) {
       this.patternItems = this.patternItems!.slice(0, i);
     }
   }
