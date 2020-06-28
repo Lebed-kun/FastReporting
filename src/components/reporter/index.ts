@@ -39,9 +39,7 @@ class Reporter extends Component<Props> {
   }
 
   private contentPatterns(): HTMLElement {
-    this.patternList = new PatternList({
-      patterns: ["Hello", "world"] // TODO: remove that
-    });
+    this.patternList = new PatternList({});
 
     const $content = this.patternList.render()!;
 
@@ -56,7 +54,7 @@ class Reporter extends Component<Props> {
       onSubmit: ({ pattern }) => {
         this.patternList &&
           this.patternList.setProps({
-            patterns: [...this.patternList.getProps().patterns, pattern]
+            patterns: [...this.patternList.getProps().patterns!, pattern]
           });
       }
     });

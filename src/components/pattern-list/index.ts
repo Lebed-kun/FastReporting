@@ -1,26 +1,42 @@
 import Component from "../../component";
 
 import PatternItem from "../pattern-item";
+import PatternsDB from "../pattern-db";
 
 interface Props {
-  patterns: string[];
+  patterns?: string[];
 }
 
 class PatternList extends Component<Props> {
   private $html?: HTMLElement;
   private patternItems?: PatternItem[];
+  private patternDB?: PatternsDB;
+
+  private beforeHTMLrender() {
+    this.patternDB = new PatternsDB({
+      onLoad: (patterns: string[]) => {
+        if (!this.props.patterns) {
+          this.props.patterns = patterns;
+        }
+      }
+    });
+
+    this.patternDB!.loadPatterns();
+  }
 
   private initialize() {
+    this.beforeHTMLrender();
+
     const $html = document.createElement("div");
     $html.className = "FastReporting__PatternList";
 
-    this.patternItems = this.props.patterns.map(
+    this.patternItems = this.props.patterns!.map(
       (el, i) =>
         new PatternItem({
           pattern: el,
           onDelete: () => {
             this.setProps({
-              patterns: this.props.patterns.filter((_, j) => j !== i)
+              patterns: this.props.patterns!.filter((_, j) => j !== i)
             });
           }
         })
@@ -41,30 +57,30 @@ class PatternList extends Component<Props> {
     // For simplicity purpose now
     // just patch non-matching differences
     let i = 0;
-    const minLength = Math.min(patterns.length, patternItems!.length);
-    const maxLength = Math.max(patterns.length, patternItems!.length);
+    const minLength = Math.min(patterns!.length, patternItems!.length);
+    const maxLength = Math.max(patterns!.length, patternItems!.length);
 
     for (; i < minLength; i++) {
       const patternItem = patternItems![i];
 
-      if (patterns[i] !== patternItem.getProps().pattern) {
+      if (patterns![i] !== patternItem.getProps().pattern) {
         patternItem.setProps({
-          pattern: patterns[i]
+          pattern: patterns![i]
         });
       }
     }
 
     // For insertion
-    if (minLength !== maxLength && maxLength === patterns.length) {
+    if (minLength !== maxLength && maxLength === patterns!.length) {
       this.patternItems = [
         ...patternItems!,
-        ...patterns.slice(i).map(
+        ...patterns!.slice(i).map(
           (pattern, j) =>
             new PatternItem({
               pattern,
               onDelete: () => {
                 this.setProps({
-                  patterns: this.props.patterns.filter((_, k) => k !== j + i)
+                  patterns: this.props.patterns!.filter((_, k) => k !== j + i)
                 });
               }
             })
@@ -83,6 +99,7 @@ class PatternList extends Component<Props> {
 
   private update() {
     this.patchPatterns();
+    this.patternDB!.savePatterns(this.props.patterns!);
   }
 
   public render() {
