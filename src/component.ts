@@ -1,3 +1,5 @@
+import { debounce } from "./utils";
+
 interface DefaultProps {
   children?: any;
 }
@@ -11,7 +13,7 @@ abstract class Component<Props = {}> {
 
   public setProps(newProps: Props & DefaultProps): void {
     this.props = Object.assign({}, this.props, newProps);
-    this.render();
+    debounce(() => this.render());
   }
 
   public getProps(): Props & DefaultProps {
