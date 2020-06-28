@@ -2,4 +2,5 @@
 // import "./tests/reporter"; // Corrrect!
 // import "./tests/pattern-item"; // Correct!
 // import "./tests/generic-form"; // Correct!
-import "./tests/app";
+// import "./tests/generic-popup"; // Correct!
+// import "./tests/app";

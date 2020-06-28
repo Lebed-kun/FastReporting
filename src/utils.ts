@@ -1,1 +1,1 @@
-export const debounce = callback => Promise.resolve().then(callback);
+export const debounce = (callback: any) => Promise.resolve().then(callback);
