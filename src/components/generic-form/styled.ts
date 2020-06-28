@@ -9,7 +9,8 @@ class Style extends Component {
       }
 
       .FastReporting__GenericForm__input {
-        font-size: 1.5rem;
+        font-size: 16px;
+        padding: 4px;
       }
 
       .FastReporting__GenericForm__button {

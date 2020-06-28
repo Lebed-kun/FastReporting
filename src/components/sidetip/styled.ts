@@ -5,7 +5,7 @@ class Style extends Component {
     return `
       .FastReporting__Sidetip {
         position: fixed;
-        top: 50%;
+        top: calc(50% - 20px);
         left: 0;
 
         transform: rotate(90deg) translateY(100%);

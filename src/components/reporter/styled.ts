@@ -5,10 +5,9 @@ class Style extends Component {
     return `
       .FastReporting__Reporter {
         width: 400px;
-        min-height: 200px;
 
         position: fixed;
-        top: 50%;
+        top: calc(50% - 100px);
         left: 12px;
         
         border: 2px solid grey;

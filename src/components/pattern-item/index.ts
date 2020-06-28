@@ -43,6 +43,10 @@ class PatternItem extends Component<Props> {
 
     return this.$html;
   }
+
+  public getHTML() {
+    return this.$html;
+  }
 }
 
 export default PatternItem;

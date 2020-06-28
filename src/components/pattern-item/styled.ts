@@ -7,7 +7,7 @@ class Style extends Component {
         display: flex;
         justify-content: space-between;
 
-        padding: 12px 16px;
+        padding: 8px 12px;
 
         background: #9c9c9c;
         transition: 0.6s;
@@ -19,7 +19,7 @@ class Style extends Component {
       }
 
       .FastReporting__PatternItem__text {
-         font-size: 20px;
+         font-size: 16px;
          font-family: sans-serif;
          color: black;
       } 
