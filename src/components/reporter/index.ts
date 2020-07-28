@@ -12,6 +12,7 @@ class Reporter extends Component<Props> {
   private $html?: HTMLElement;
   private patternList?: PatternList;
   private addPatternForm?: GenericForm;
+  private reportForm?: GenericForm;
 
   private head(): HTMLElement {
     const $head = document.createElement("div");
@@ -36,6 +37,17 @@ class Reporter extends Component<Props> {
     $content.append(this.contentPatterns(), this.contentAddItem());
 
     return $content;
+  }
+
+  private contentReport(): HTMLElement {
+    this.reportForm = new GenericForm({
+      fieldName: "reason",
+      placeholder: "Причина репорта...",
+      buttonText: "Отправить",
+      onSubmit: ({ reason }) => {
+        // TODO: send report for 2ch.hk
+      }
+    });
   }
 
   private contentPatterns(): HTMLElement {
