@@ -97,7 +97,7 @@ const prepareData = ({
 const sendData = async (reportData: any[]) => {
   const responses = await Promise.all(
     reportData.map((data) => {
-      return fetch("https://2ch.hk/makaba/makaba.fcgi?json=1", {
+      return fetch("/makaba/makaba.fcgi?json=1", {
         method: "POST",
         body: JSON.stringify(data)
       });
