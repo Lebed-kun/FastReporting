@@ -11,9 +11,15 @@ abstract class Component<Props = {}> {
     this.props = props;
   }
 
-  public setProps(newProps: Props & DefaultProps): void {
+  public setProps(
+    newProps: Props & DefaultProps,
+    rerender: boolean = true
+  ): void {
     this.props = Object.assign({}, this.props, newProps);
-    debounce(() => this.render());
+
+    if (rerender) {
+      debounce(() => this.render());
+    }
   }
 
   public getProps(): Props & DefaultProps {

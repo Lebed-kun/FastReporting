@@ -16,7 +16,8 @@ class PatternList extends Component<Props> {
     this.patternDB = new PatternsDB({
       onLoad: (patterns: string[]) => {
         if (!this.props.patterns) {
-          this.props.patterns = patterns;
+          // @ts-ignore
+          this.setProps(patterns, false);
         }
       }
     });
@@ -42,7 +43,7 @@ class PatternList extends Component<Props> {
         })
     );
 
-    this.patternItems.forEach(el => {
+    this.patternItems.forEach((el) => {
       const $child = el.render()!;
       $html.appendChild($child);
     });
@@ -87,7 +88,7 @@ class PatternList extends Component<Props> {
         )
       ];
 
-      this.patternItems.slice(i).forEach(item => {
+      this.patternItems.slice(i).forEach((item) => {
         this.$html && this.$html.appendChild(item.render()!);
       });
     }

@@ -1,44 +1,120 @@
 import { debounce } from "../../utils";
 
 const queryThreads = async () => {
-  const threads = await debounce(() => {
-    return document.querySelectorAll("[class^=thread-]");
+  return debounce(() => {
+    return document.querySelectorAll("[id^=thread-]");
   });
-
-  return threads;
 };
 
-const queryThreadBlocks = async (parentList, selector) => {
-  let result = [];
+const queryPosts = async (threads: Element[]) => {
+  const posts = await Promise.all(
+    threads.map((thread) => {
+      return debounce(() => {
+        return thread.querySelectorAll("[id^=post-]");
+      });
+    })
+  );
 
-  for (let i = 0; i < parentList.length; i++) {
-    const blocks = await debounce(() => {
-      return parentList[i].querySelectorAll(selector);
-    });
+  return posts;
+};
 
-    result = [...result, blocks];
+const postMatchesRegex = async (
+  title: string,
+  body: string,
+  regexes: string[]
+) => {
+  for (let i = 0; i < regexes.length; i++) {
+    const compiledRegex = (await debounce(() => {
+      return new RegExp(regexes[i]);
+    })) as RegExp;
+
+    if (title.match(compiledRegex)) {
+      return true;
+    }
+
+    if (body.match(compiledRegex)) {
+      return true;
+    }
   }
 
-  return result;
+  return false;
 };
 
-const getMatchingPostIdsByRegex = async (posts, regex) => {
-  const data = await debounce(() => {
-    return posts.reduce((res, post) => {
-      const postId = post.parentNode.getAttribute("data-num");
-      const matches = !!post.textContent.match(regex);
-      return matches ? (res.length === 0 ? postId : `${res}, ${postId}`) : res;
-    }, "");
-  });
+const getThreadAndPostIds = async (threads: Element[][], regexes: string[]) => {
+  let threadIds: {
+    [key: string]: string[];
+  } = {};
+
+  for (let i = 0; i < threads.length; i++) {
+    for (let j = 0; j < threads[i].length; i++) {
+      const postTitle = (await debounce(() => {
+        return threads[i][j].querySelector(".post__title")?.textContent;
+      })) as string;
+
+      const postBody = (await debounce(() => {
+        return threads[i][j].querySelector(".post__message")?.textContent;
+      })) as string;
+
+      const matchesRegex = await postMatchesRegex(postTitle, postBody, regexes);
+
+      if (matchesRegex) {
+        const threadId = threads[i][j].parentElement?.id.replace("thread-", "");
+
+        threadIds[threadId!]
+          ? threadIds[threadId!]!.push(threads[i][j].id.replace("post-", ""))
+          : (threadIds[threadId!] = [threads[i][j].id.replace("post-", "")]);
+      }
+    }
+  }
+
+  return threadIds;
+};
+
+const prepareData = ({
+  threadIds,
+  reason
+}: {
+  threadIds: {
+    [key: string]: string[];
+  };
+  reason: string;
+}) => {
+  let data = [];
+
+  for (let threadId in threadIds) {
+    data.push({
+      board: (window as any).thread.board,
+      thread: threadId,
+      posts: threadIds[threadId].join(", "),
+      comment: reason,
+      task: "report"
+    });
+  }
 
   return data;
 };
 
-const getAllMatchingPostIds = async (posts, regexes) => {
-  let result = ``;
+const sendData = async (reportData: any[]) => {
+  const responses = await Promise.all(
+    reportData.map((data) => {
+      return fetch("https://2ch.hk/makaba/makaba.fcgi?json=1", {
+        method: "POST",
+        body: JSON.stringify(data)
+      });
+    })
+  );
 
-  for (let i = 0; i < regexes.length; i++) {
-    const postIds = await getMatchingPostIdsByRegex(posts, regexes[i]);
-    result = result.length === 0 ? postIds! : `${result}, ${postIds!}`;
-  }
+  return responses;
 };
+
+const report = async (reason: string, regexes: string[]) => {
+  const threads = (await queryThreads()) as Element[];
+  const threadPosts = (await queryPosts(threads)) as Element[][];
+  const threadIds = await getThreadAndPostIds(threadPosts, regexes);
+  const reportData = await prepareData({ threadIds, reason });
+  const responses = await sendData(reportData);
+
+  return responses;
+};
+
+export default report;
